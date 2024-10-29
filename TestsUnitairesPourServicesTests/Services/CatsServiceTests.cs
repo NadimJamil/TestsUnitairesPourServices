@@ -35,8 +35,8 @@ namespace TestsUnitairesPourServices.Services.Tests
                 Age = 12
             };
 
-            House house1 = new House { Id = 1, OwnerName = "Franky" };
-            House house2 = new House { Id = 2, OwnerName = "Maximus" };
+            House house1 = new House { Id = 1, OwnerName = "Franky", Address = "1908 rue jean"};
+            House house2 = new House { Id = 2, OwnerName = "Maximus", Address = "5466 rue De la porte"};
 
             Cat chat2 = new Cat { Id = 2, Name = "Bob", Age = 3, House = house1 };
 
@@ -74,11 +74,11 @@ namespace TestsUnitairesPourServices.Services.Tests
         {
             using ApplicationDBContext db = new ApplicationDBContext(options);
             var service = new CatsService(db);
-            var chatIdInconnu = db.Cat.Find(3);
+            //var chatIdInconnu = db.Cat.Find(3);
             var maison1 = db.House.Find(1);
             var maison2 = db.House.Find(2);
 
-            var chatSansId = service.Move(chatIdInconnu.Id, maison1, maison2);
+            var chatSansId = service.Move(35, maison1, maison2);
             Assert.IsNull(chatSansId);
         }
 
@@ -92,7 +92,7 @@ namespace TestsUnitairesPourServices.Services.Tests
             var maison2 = db.House.Find(2);
 
             Exception e = Assert.ThrowsException<WildCatException>(() => service.Move(chatIdInconnu.Id, maison1, maison2));
-            Assert.AreEqual("Chat sauvage", e.Message);
+            Assert.AreEqual("On n'apprivoise pas les chats sauvages", e.Message);
         }
 
         [TestMethod()]
@@ -105,7 +105,7 @@ namespace TestsUnitairesPourServices.Services.Tests
             var maison2 = db.House.Find(2);
 
             Exception e = Assert.ThrowsException<DontStealMyCatException>(() => service.Move(chatIdInconnu.Id, maison2, maison1));
-            Assert.AreEqual("Pas mon chat", e.Message);
+            Assert.AreEqual("Touche pas à mon chat!", e.Message);
         }
     }
 }
